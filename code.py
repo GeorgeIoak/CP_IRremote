@@ -2,7 +2,7 @@ import board
 import busio
 import displayio
 import terminalio
-import IRLib_P03_RC5d # We only need to decode RC5
+import IRLib_P03_RC5d  # We only need to decode RC5
 import IRrecvPCI
 from adafruit_display_text import label
 import adafruit_displayio_ssd1306
@@ -34,15 +34,16 @@ btnPlay = 5
 btnPause = 6
 btnOpenClose = 7
 btnPwrOnOff = 8
+btnVolUp = 0x121b
 
 displayio.release_displays()
 
-oled_reset = board.D9 # Change to -1 if reset pin isn't available
-ir_inpin = D12 # Change to the pin that the TSOP4438 recevier is connected to
+#oled_reset = -1 # Change to -1 if reset pin isn't available
+ir_inpin = board.D12 # Change to the pin that the TSOP4438 recevier is connected to
 
 # Use for I2C
 i2c = board.I2C()
-display_bus = displayio.I2CDisplay(i2c, device_address=0x3C, reset=oled_reset)
+display_bus = displayio.I2CDisplay(i2c, device_address=0x3C)
 
 myDecoder = IRLib_P03_RC5d.IRdecodeRC5()
 myDecoder.ignoreHeader = True # My improve decoding weak signals
@@ -69,15 +70,19 @@ group.append(text_area)
 
 
 while True:
-	while (not myReceiver.getResults()):
-		pass
-	if myDecoder.decode():
-		print("success")
-		text = myDecoder.value & 0xf7ff # mask off the toggle bit
-		print(text)
-		display.show(group)
-
-	else:
-		print("failed")
-	myDecoder.dumpResults(True) # True: Verbose Output, False: Brief Output
-	myReceiver.enableIRIn()
+    while (not myReceiver.getResults()):
+        pass
+    if myDecoder.decode():
+        print("success")
+        text = "Key Pushed: "
+        text += str(myDecoder.value & 0xf7ff) # mask off the toggle bit
+        print(text)
+        text_area = label.Label(
+           terminalio.FONT, text=text, color=0xFFFFFF, x=20, y=50
+        )
+        group.append(text_area)
+        display.show(group)
+    else:
+        print("It failed")
+    myDecoder.dumpResults(False)
+    myReceiver.enableIRIn()
