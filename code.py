@@ -80,7 +80,7 @@ while True:
         text_area = label.Label(
            terminalio.FONT, text=text, color=0xFFFFFF, x=20, y=50
         )
-        group.append(text_area)
+        group[0] = text_area
         display.show(group)
     else:
         print("It failed")
