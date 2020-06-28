@@ -37,6 +37,10 @@ btnPause = 6
 btnOpenClose = 7
 btnPwrOnOff = 8
 btnVolUp = 0x121b
+btnSrcUp = 4631
+btnSrcDwn = 4636
+
+curInput = 0 #What Source Input are we currently at
 
 displayio.release_displays()
 
@@ -72,16 +76,14 @@ group.append(text_area)
 
 # PCF8574A Code
 mcp = MCP23008(i2c, address=0x3F)
-pin0 = mcp.get_pin(0)
-pin0.direction = digitalio.Direction.OUTPUT
-pin0.value = True  # GPIO0 / GPIOA0 to high logic level
-testpin = digitalio.DigitalInOut(board.D10)
-testpin.direction = digitalio.Direction.INPUT
-print("PCF P0 is currently ")
-print(testpin.value)
-pin0.value = False
-print("PCF P0 is currently, should be low ")
-print(testpin.value)
+# Make a list of all the port A pins (a.k.a 0-7)
+port_a_pins = []
+for pin in range(0, 8):
+    port_a_pins.append(mcp.get_pin(pin))
+
+# Set all the port A pins to output
+for pin in port_a_pins:
+    pin.direction = digitalio.Direction.OUTPUT
 
 while True:
     while (not myReceiver.getResults()):
@@ -90,6 +92,13 @@ while True:
         print("success")
         text = "Key Pushed: "
         text += str(myDecoder.value & 0xf7ff) # mask off the toggle bit
+        if (myDecoder.value & 0xf7ff) == btnSrcUp:
+            if curInput == 7:
+                curInput = 0
+            else:
+                curInput += 1
+        print ("Current Input is: ")
+        print(curInput)
         print(text)
         text_area = label.Label(
            terminalio.FONT, text=text, color=0xFFFFFF, x=20, y=50
