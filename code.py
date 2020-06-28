@@ -6,6 +6,8 @@ import IRLib_P03_RC5d  # We only need to decode RC5
 import IRrecvPCI
 from adafruit_display_text import label
 import adafruit_displayio_ssd1306
+import digitalio
+from adafruit_mcp230xx.mcp23008 import MCP23008
 
 # define Remote Codes
 # RC5 address is either 4 or 5
@@ -68,6 +70,18 @@ text_area = label.Label(
 )
 group.append(text_area)
 
+# PCF8574A Code
+mcp = MCP23008(i2c, address=0x3F)
+pin0 = mcp.get_pin(0)
+pin0.direction = digitalio.Direction.OUTPUT
+pin0.value = True  # GPIO0 / GPIOA0 to high logic level
+testpin = digitalio.DigitalInOut(board.D10)
+testpin.direction = digitalio.Direction.INPUT
+print("PCF P0 is currently ")
+print(testpin.value)
+pin0.value = False
+print("PCF P0 is currently, should be low ")
+print(testpin.value)
 
 while True:
     while (not myReceiver.getResults()):
