@@ -7,7 +7,9 @@ import IRrecvPCI
 from adafruit_display_text import label
 import adafruit_displayio_ssd1306
 import digitalio
-from adafruit_mcp230xx.mcp23008 import MCP23008
+import pcf8574
+
+#  Test for MP library insertion
 
 # define Remote Codes
 # RC5 address is either 4 or 5
@@ -75,15 +77,7 @@ text_area = label.Label(
 group.append(text_area)
 
 # PCF8574A Code
-mcp = MCP23008(i2c, address=0x3F)
-# Make a list of all the port A pins (a.k.a 0-7)
-port_a_pins = []
-for pin in range(0, 8):
-    port_a_pins.append(mcp.get_pin(pin))
-
-# Set all the port A pins to output
-for pin in port_a_pins:
-    pin.direction = digitalio.Direction.OUTPUT
+pcf = pcf8574.PCF8574(i2c, 0x3F)
 
 while True:
     while (not myReceiver.getResults()):
@@ -93,13 +87,17 @@ while True:
         text = "Key Pushed: "
         text += str(myDecoder.value & 0xf7ff) # mask off the toggle bit
         if (myDecoder.value & 0xf7ff) == btnSrcUp:
-            if curInput == 7:
+            if curInput == 8:
                 curInput = 0
             else:
                 curInput += 1
-                port_a_pins[0].value = (curInput & 1) >> 0
-                port_a_pins[1].value = (curInput & 2) >> 1
-                port_a_pins[2].value = (curInput & 4) >> 2
+            while not i2c.try_lock():
+                pass
+            if curInput == 8:
+                pcf.port = 0xF
+            else:
+                pcf.port = curInput
+            i2c.unlock()
         print ("Current Input is: ")
         print(curInput)
         print(text)
@@ -108,7 +106,7 @@ while True:
         )
         group[0] = text_area
         display.show(group)
-    else:
-        print("It failed")
-    myDecoder.dumpResults(False)
-    myReceiver.enableIRIn()
+    #  else:
+        #  print("It failed")
+    #  myDecoder.dumpResults(False)
+    #  myReceiver.enableIRIn()
