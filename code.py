@@ -97,7 +97,7 @@ while True:
                 curInput = 0
             else:
                 curInput += 1
-                port_a_pins[0].value = (curInput & 0) >> 0
+                port_a_pins[0].value = (curInput & 1) >> 0
                 port_a_pins[1].value = (curInput & 2) >> 1
                 port_a_pins[2].value = (curInput & 4) >> 2
         print ("Current Input is: ")
