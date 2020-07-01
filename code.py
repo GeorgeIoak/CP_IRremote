@@ -40,14 +40,17 @@ btnOpenClose = 7
 btnPwrOnOff = 8
 btnVolUp = 0x121b
 btnSrcUp = 4631
-btnSrcDwn = 4636
+btnSrcDwn = 4632
 
-curInput = 0 #What Source Input are we currently at
+selInput = ["SPDIF 1", "SPDIF 2", "OPTICAL 1", "OPTICAL 2", "AES", "OPT 2", "DIG", "USB", " "]
+
+curInput = 0 #  What Source Input are we currently at
+remCode = 0  #  Current remote code with toggle bit masked off
 
 displayio.release_displays()
 
 #oled_reset = -1 # Change to -1 if reset pin isn't available
-ir_inpin = board.D12 # Change to the pin that the TSOP4438 recevier is connected to
+ir_inpin = board.D9 # Change to the pin that the TSOP4438 recevier is connected to
 
 # Use for I2C
 i2c = board.I2C()
@@ -77,20 +80,29 @@ text_area = label.Label(
 group.append(text_area)
 
 # PCF8574A Code
-pcf = pcf8574.PCF8574(i2c, 0x3F)
+pcf = pcf8574.PCF8574(i2c, 0x39) ## A0=H, A1=L, A2=L
 
 while True:
     while (not myReceiver.getResults()):
         pass
     if myDecoder.decode():
         print("success")
-        text = "Key Pushed: "
-        text += str(myDecoder.value & 0xf7ff) # mask off the toggle bit
-        if (myDecoder.value & 0xf7ff) == btnSrcUp:
-            if curInput == 8:
+        #  text = "Key Pushed: "
+        #  text += str(myDecoder.value & 0xf7ff) # mask off the toggle bit
+        remCode = myDecoder.value & 0xf7ff
+        print("Remote Code is ", remCode)
+        if (remCode == btnSrcUp) or (remCode == btnSrcDwn):
+            if curInput == 8 and remCode == btnSrcUp:
                 curInput = 0
             else:
-                curInput += 1
+                if remCode == btnSrcUp:
+                    curInput += 1
+                else:
+                    print("SOURCE - was pressed")
+                    if curInput == 0:
+                        curInput = 8
+                    else:
+                        curInput -= 1
             while not i2c.try_lock():
                 pass
             if curInput == 8:
@@ -100,6 +112,7 @@ while True:
             i2c.unlock()
         print ("Current Input is: ")
         print(curInput)
+        text = selInput[curInput]
         print(text)
         text_area = label.Label(
            terminalio.FONT, text=text, color=0xFFFFFF, x=20, y=50
