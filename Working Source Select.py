@@ -1,5 +1,4 @@
 import board
-import board
 import busio
 import displayio
 import terminalio
@@ -9,9 +8,6 @@ from adafruit_display_text import label
 import adafruit_displayio_ssd1306
 import digitalio
 import pcf8574
-import bitbangio
-
-# IR Library from https://github.com/cyborg5/IRLibCP
 
 #  Test for MP library insertion
 
@@ -42,8 +38,7 @@ btnPlay = 5
 btnPause = 6
 btnOpenClose = 7
 btnPwrOnOff = 8
-btnVolUp = 4635
-btnVolDwn = 4636
+btnVolUp = 0x121b
 btnSrcUp = 4631
 btnSrcDwn = 4632
 
@@ -51,7 +46,6 @@ selInput = ["SPDIF 1", "SPDIF 2", "OPTICAL 1", "OPTICAL 2", "AES", "OPT 2", "DIG
 
 curInput = 0 #  What Source Input are we currently at
 remCode = 0  #  Current remote code with toggle bit masked off
-curVol = 0
 
 displayio.release_displays()
 
@@ -84,20 +78,9 @@ text_area = label.Label(
     terminalio.FONT, text=text, color=0xFFFFFF, x=28, y=HEIGHT // 2 - 1
 )
 group.append(text_area)
-text_volume = label.Label(
-    terminalio.FONT, text=text, color=0xFFFFFF, x=28, y=HEIGHT // 2 - 1
-)
-group.append(text_volume)
 
 # PCF8574A Code
 pcf = pcf8574.PCF8574(i2c, 0x39) ## A0=H, A1=L, A2=L
-
-# Volume Control Code
-cs = digitalio.DigitalInOut(board.D10)
-cs.direction = digitalio.Direction.OUTPUT
-cs.value = True
-
-spi = bitbangio.SPI(board.D11, MOSI=board.D12)
 
 while True:
     while (not myReceiver.getResults()):
@@ -131,39 +114,11 @@ while True:
         print(curInput)
         text = selInput[curInput]
         print(text)
-        # print(myDecoder.dumpResults(True))
         text_area = label.Label(
            terminalio.FONT, text=text, color=0xFFFFFF, x=20, y=50
         )
         group[0] = text_area
         display.show(group)
-        if (remCode == btnVolUp) or (remCode == btnVolDwn):
-            if (curVol == 255) and (remCode == btnVolUp):
-                curVol = curVol
-            else:
-                if remCode == btnVolUp:
-                    curVol += 1
-                else:
-                    if curVol == 0:
-                        curVol = curVol
-                    else:
-                        curVol -= 1
-            while not spi.try_lock():
-                pass
-            print("Current volume is: ", curVol)
-            spi.configure(baudrate=500000, phase=1, polarity=1)
-            cs.value = False
-            spi.write(bytes([curVol, curVol]))
-            #spi.write(bytes([0xC9, 0xC9]))
-            cs.value = True
-            spi.unlock()
-            text = "Vol: " + str(curVol)
-            text_volume = label.Label(
-                terminalio.FONT, text=text, color=0xFFFFFF, x=20, y=10
-            )
-            group[1] = text_volume
-            display.show(group)
-            print(text)
     #  else:
         #  print("It failed")
     #  myDecoder.dumpResults(False)

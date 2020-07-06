@@ -1,0 +1,101 @@
+SOURCE+
+===================
+success
+Remote Code is  4631
+Current Input is: 
+1
+SPDIF 2
+Decoded RC5 (3): Value:0x1217 Adrs: 0x0 (13 bits)
+Raw samples(21):  Head: m945 s886
+ 0:m1885 s860 	 1:m946 s1799 		  2:m1881 s860 	 3:m971 s860 		  
+ 4:m967 s860 	 5:m972 s1774 		  6:m1885 s1773 	 7:m942 s885 		  
+ 8:m947 s885 	 9:m942 
+None
+success
+Remote Code is  4631
+Current Input is: 
+2
+OPTICAL 1
+Decoded RC5 (3): Value:0x1a17 Adrs: 0x0 (13 bits)
+Raw samples(21):  Head: m942 s886
+ 0:m920 s911 	 1:m1882 s1778 		  2:m1856 s890 	 3:m968 s860 		  
+ 4:m968 s864 	 5:m968 s1773 		  6:m1861 s1799 	 7:m943 s889 		  
+ 8:m943 s911 	 9:m890 
+None
+
+SOURCE-
+===================
+success
+Remote Code is  4632
+SOURCE - was pressed
+Current Input is: 
+1
+SPDIF 2
+Decoded RC5 (3): Value:0x1218 Adrs: 0x0 (13 bits)
+Raw samples(21):  Head: m946 s886
+ 0:m1886 s860 	 1:m968 s1778 		  2:m1882 s889 	 3:m943 s860 		  
+ 4:m967 s860 	 5:m998 s1748 		  6:m946 s912 	 7:m1830 s885 		  
+ 8:m972 s861 	 9:m967 
+None
+success
+Remote Code is  4632
+SOURCE - was pressed
+Current Input is: 
+0
+SPDIF 1
+Decoded RC5 (3): Value:0x1a18 Adrs: 0x0 (13 bits)
+Raw samples(21):  Head: m942 s890
+ 0:m917 s911 	 1:m1882 s1779 		  2:m1882 s864 	 3:m942 s886 		  
+ 4:m942 s890 	 5:m968 s1774 		  6:m917 s916 	 7:m1856 s890 		  
+ 8:m967 s865 	 9:m964 
+None
+
+VOLUME +
+===================
+success
+Remote Code is  4635
+Current Input is: 
+0
+SPDIF 1
+Decoded RC5 (3): Value:0x121b Adrs: 0x0 (13 bits)
+Raw samples(21):  Head: m942 s890
+ 0:m1855 s912 	 1:m942 s1778 		  2:m1856 s890 	 3:m942 s886 		  
+ 4:m968 s890 	 5:m916 s1826 		  6:m890 s942 	 7:m1830 s1829 		  
+ 8:m891 s937 	 9:m865 
+None
+success
+Remote Code is  4635
+Current Input is: 
+0
+SPDIF 1
+Decoded RC5 (3): Value:0x1a1b Adrs: 0x0 (13 bits)
+Raw samples(21):  Head: m946 s885
+ 0:m968 s890 	 1:m1856 s1774 		  2:m1886 s885 	 3:m942 s890 		  
+ 4:m942 s860 	 5:m967 s1778 		  6:m968 s885 	 7:m1835 s1799 		  
+ 8:m942 s885 	 9:m947 
+None
+
+VOLUME -
+===================
+success
+Remote Code is  4636
+Current Input is: 
+0
+SPDIF 1
+Decoded RC5 (3): Value:0x121c Adrs: 0x0 (13 bits)
+Raw samples(21):  Head: m920 s912
+ 0:m1860 s885 	 1:m968 s1778 		  2:m1855 s886 	 3:m942 s890 		  
+ 4:m942 s886 	 5:m942 s1803 		  6:m942 s886 	 7:m916 s915 		  
+ 8:m1882 s864 	 9:m968 
+None
+success
+Remote Code is  4636
+Current Input is: 
+0
+SPDIF 1
+Decoded RC5 (3): Value:0x1a1c Adrs: 0x0 (13 bits)
+Raw samples(21):  Head: m942 s886
+ 0:m946 s911 	 1:m1834 s1800 		  2:m1860 s911 	 3:m943 s885 		  
+ 4:m942 s865 	 5:m942 s1799 		  6:m972 s886 	 7:m916 s886 		  
+ 8:m1860 s886 	 9:m968 
+None
