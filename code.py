@@ -59,27 +59,28 @@ displayio.release_displays()
 #oled_reset = -1 # Change to -1 if reset pin isn't available
 ir_inpin = board.D9 # Change to the pin that the TSOP4438 recevier is connected to
 
-# Use for I2C
-i2c = board.I2C()
-# display_bus = displayio.I2CDisplay(i2c, device_address=0x3C) # Used for I2C OLED
 
-# Newhaven Display 
-spi = busio.SPI(board.SCL, board.SDA)
-tft_cs = board.D6
-tft_dc = board.D9
+# Newhaven Display
+hardspi = busio.SPI(board.D25, board.D24)
+tft_cs = board.D1
+tft_dc = board.D0
 tft_reset = board.D5
 
 display_bus = displayio.FourWire(
-	spi, command=tft_dc, chip_select=tft_cs, reset=tft_reset, baudrate=1000000
+	hardspi, command=tft_dc, chip_select=tft_cs, baudrate=1000000
 )
-time.sleep(1)
+# time.sleep(1)
 
 WIDTH = 256 # Changed from 128 for the Newhaven display
 HEIGHT = 64  # Change to 32 if needed
 BORDER = 5
 
 # display = adafruit_displayio_ssd1306.SSD1306(display_bus, width=WIDTH, height=HEIGHT) # I2C OLED
-display = adafruit_ssd1322.SSD1322(display_bus, width=WIDTH, height=HEIGHT)
+display = adafruit_ssd1322.SSD1322(display_bus, width=WIDTH, height=HEIGHT, colstart=28)
+
+# Use for I2C
+i2c = board.I2C() #board.D21, board.D22
+# display_bus = displayio.I2CDisplay(i2c, device_address=0x3C) # Used for I2C OLED
 
 myDecoder = IRLib_P03_RC5d.IRdecodeRC5()
 myDecoder.ignoreHeader = True # My improve decoding weak signals
