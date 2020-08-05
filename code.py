@@ -6,7 +6,8 @@ import terminalio
 import IRLib_P03_RC5d  # We only need to decode RC5
 import IRrecvPCI
 from adafruit_display_text import label
-import adafruit_displayio_ssd1306
+# import adafruit_displayio_ssd1306
+import adafruit_ssd1322
 import digitalio
 import pcf8574
 import bitbangio
@@ -60,7 +61,25 @@ ir_inpin = board.D9 # Change to the pin that the TSOP4438 recevier is connected 
 
 # Use for I2C
 i2c = board.I2C()
-display_bus = displayio.I2CDisplay(i2c, device_address=0x3C)
+# display_bus = displayio.I2CDisplay(i2c, device_address=0x3C) # Used for I2C OLED
+
+# Newhaven Display 
+spi = busio.SPI(board.SCL, board.SDA)
+tft_cs = board.D6
+tft_dc = board.D9
+tft_reset = board.D5
+
+display_bus = displayio.FourWire(
+	spi, command=tft_dc, chip_select=tft_cs, reset=tft_reset, baudrate=1000000
+)
+time.sleep(1)
+
+WIDTH = 256 # Changed from 128 for the Newhaven display
+HEIGHT = 64  # Change to 32 if needed
+BORDER = 5
+
+# display = adafruit_displayio_ssd1306.SSD1306(display_bus, width=WIDTH, height=HEIGHT) # I2C OLED
+display = adafruit_ssd1322.SSD1322(display_bus, width=WIDTH, height=HEIGHT)
 
 myDecoder = IRLib_P03_RC5d.IRdecodeRC5()
 myDecoder.ignoreHeader = True # My improve decoding weak signals
@@ -68,18 +87,12 @@ myReceiver = IRrecvPCI.IRrecvPCI(ir_inpin) # pin needs to be capable of interrup
 myReceiver.enableIRIn()
 print("Time to push a button!")
 
-WIDTH = 128
-HEIGHT = 64  # Change to 32 if needed
-BORDER = 5
-
-display = adafruit_displayio_ssd1306.SSD1306(display_bus, width=WIDTH, height=HEIGHT)
-
 # Make the display context
 group = displayio.Group(max_size=10)
 display.show(group)
 
 # Draw a label
-text = "Hello World!"
+text = "BLADELIUS"
 text_area = label.Label(
     terminalio.FONT, text=text, color=0xFFFFFF, x=28, y=HEIGHT // 2 - 1
 )
